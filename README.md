@@ -14,7 +14,7 @@ For details, see the [details document](docs/details.md) -- you'll find a high-l
 3. Implement two methods in `BinarySearchLibrary`: `firstIndex` and `lastIndex`, both of which will use the `PrefixComparator` you completed in the previous step. Test with `TestBinarySearchLibrary`. **We recommend you try to finish these first three steps early**.
 4. Finish implementing `BinarySearchAutocomplete` that extends `Autocompletor` by completing the `topMatches` method. This will use the `firstIndex` and `lastIndex` methods you wrote in the previous step and the code in `BruteAutocomplete.topMatches`  as a model. Test with `TestBinarySearchAutocomplete` and running `AutocompleteMain` using `BinarySearchAutocomplete`.
 5. Create and implement a new class `HashListAutocomplete` that implements interface `Autocompletor`. Test by running `AutocompleteMain` using `HashListAutocomplete`.
-6. Run benchmarks and answer analysis questions. Submit code, analysis.
+6. Run benchmarks.
 
 
 ## Part 1: Run Autocomplete Main
@@ -59,74 +59,4 @@ You'll also see a `Term` object called `dummy` created from the `String` passed 
 In this part, you will provide one more implementation of the `Autocompletor` interface, this time from scratch. Unlike `BruteAutocomplete` and `BinarySearchAutocomplete`, this third implementation will be based on the use of a `HashMap` instead of the binary search algorithm. This class will provide an `O(1)` implementation of `topMatches` --- with a tradeoff of requiring more memory.
 
 A skeleton of `HashListAutocomplete` can be found in the `HashListAutocomplete.java` file that `implements` the `Autocompletor` interface. **For details about the class and code you write see [the details document](docs/details.md).**
-
-
-## Analysis Questions and Benchmarking
-
-You'll submit the analysis as a PDF separate from the code in Gradescope. 
-
-**Question 1.** Inside of `BenchmarkForAutocomplete`, uncomment the two other implementation names so that `myCompletorNames` has all three Strings: `"BruteAutocomplete"`, `"BinarySearchAutocomplete"`, and `"HashListAutocomplete"` (if you want to benchmark only a subset of these, perhaps because one isn't working, just leave it commented out).
-
-Run `BenchmarkForAutocomplete` three times, once for each of the files in the Benchmark program: `threeletterwords.txt`, `fourletterwords.txt`, and `alexa.txt`. You can change which file is being used inside of the `doMark` method. **Copy and paste all three results into your analysis**. An example and detailed information about the output is described in the expandable section below.
-
-#### Benchmarking Details
-
-On Professor Astachan's laptop, the first few lines are what's shown below for `data/threeletterwords.txt` (in addition, the `sizeInBytes` for the implementations are shown at the bottom). These numbers are for a file of every three letter word "aaa, "aab", … "zzy", "zzz", not actual words, but 3-character strings. All times are listed in seconds.
-
-- The `init time` data shows how long it took to initialize the different implementations.
-- The `search` column shows the prefix being used to search for autocompletions; unlabeled "search" is for an empty string `""` which matches on every term. 
-- The `size` column shows how many terms have `search` as a prefix. This is described as `M` earlier in [part 4](#part-4-finish-implementing-topmatches-in-binarysearchautocomplete).
-- `#match` shows the number of highest weight results being returned by `topMatches`. This is described as `k` earlier in [part 4](#part-4-finish-implementing-topmatches-in-binarysearchautocomplete).
-- The next three columns give the running time in seconds for `topMatches` with the given parameters for the different implementations.
-
-
-```
-init time: 0.004612     for BruteAutocomplete
-init time: 0.003348     for BinarySearchAutocomplete
-init time: 0.03887      for HashListAutocomplete
-search  size    #match  BruteAutoc      BinarySear      HashListAu
-        17576   50      0.00191738      0.00306458      0.00001950
-        17576   50      0.00039575      0.00198267      0.00000546
-a       676     50      0.00034438      0.00014479      0.00000942
-a       676     50      0.00035567      0.00015113      0.00000350
-b       676     50      0.00016033      0.00011954      0.00000292
-```
-
-**Question 2.** Let `N` be the total number of terms, let `M` be the number of terms that prefix-match a given `search` term (the `size` column above), and let `k` be the number of highest weight terms returned by `topMatches` (the `#match` column above). The runtime complexity of `BruteAutocomplete` is `O(N + M log(k))`. The runtime complexity of `BinarySearchAutocomplete` is `O(log(N) + M log(k))`. Yet you should notice (as seen in the example timing above) that `BruteAutocomplete` is similarly efficient or even slightly more efficient than `BinarySearchAutocomplete` on the empty `search` String `""`. Answer the following:
-- For the empty `search` String `""`, does `BruteAutocomplete` seem to be asymptotically more efficient than `BinarySearchAutocomplete` with respect to `N`, or is it just a constant factor more efficient? To answer, consider the different data sets you benchmarked with varying `size` values.
-- Explain why this observation (that `BruteAutocomplete` is similarly efficient or even slightly more efficient than `BinarySearchAutocomplete` on the empty `search` String `""`) makes sense given the values of `N` and `M`. 
-
-
-**Question 3.** Run the `BenchmarkForAutocomplete` again using `alexa.txt` but doubling `matchSize` to `100` (`matchSize` is specified in the `runAM` method). Again copy and paste your results. Recall that `matchSize` determines `k`, the number of highest weight terms returned by `topMatches` (the `#match` column above). Do your data support the hypothesis that the dependence of the runtime on `k` is logarithmic for `BruteAutocomplete` and `BinarySearchAutocomplete`?
-
-**Question 4.** Briefly explain why `HashListAutocomplete` is much more efficient in terms of the empirical runtime of `topMatches`, but uses more memory than the other `Autocomplete` implementations.
-
-
-## Submitting and Grading 
-
-Push your code to Git. Do this often. Once you have run and tested your completed program locally:
-
-1. Submit your code on gradescope to the autograder.
-2. Submit a PDF to Gradescope in the separate Analysis assignment. Be sure to mark pages for the questions as explained in the [gradescope documentation here](https://help.gradescope.com/article/ccbpppziu9-student-submit-work#submitting_a_pdf).
-
-### Grading
-
-| Points | Grading Criteria |
-| ------ | ------ |
-| 4 | Code Comparator|
-| 8 |  Code for BinarySearchLibrary firstIndex and lastIndex |
-| 6 | Code for BinarySearchAutocomplete.topMatches |
-| 9 | Code for HashListAutocomplete |
-| 1 | API |
-| 8 | Analysis code and questions answered. UTAs will grade and comment on this |
-
-
-We will map total points you earn to scores as follows. We will record the letter grade as your grade for this assignment. For example, a score in the range of 31-26 will range from A- to A+.
-
-31-36:  A<br>
-25-30:  B<br>
-19-24:  C<br>
-12-18:  D
-
-
 
